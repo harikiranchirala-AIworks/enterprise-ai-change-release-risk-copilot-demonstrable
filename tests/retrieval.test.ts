@@ -28,4 +28,9 @@ describe("explainable historical retrieval", () => {
     const query = { systems: ["Order Management"], changeType: "emergency", technologies: ["Kubernetes"], dependencies: ["Vendor X"], failureModes: ["quota exhaustion"] };
     expect(retrieveHistoricalEvidence(query, historicalRepository).items).toEqual([]);
   });
+  it("qualifies an exact title match without using Change ID similarity", () => {
+    const repository = [{ id: "HIST-TITLE", title: "Salesforce Production Bug fixes", summary: "Prior change.", systems: [], changeTypes: ["planned"], technologies: [], dependencies: [], failureModes: [], outcome: "success" as const, sourceSection: "Demo", canonicalGroupId: "HIST-TITLE" }];
+    const result = retrieveHistoricalEvidence({ title: "Salesforce Production Bug fixes", systems: [], changeType: "planned", technologies: [], dependencies: [], failureModes: [] }, repository);
+    expect(result.items[0].score).toBe(5); expect(result.items[0].matchReasons.find(r => r.type === "text")?.matchedValues).toEqual(["exact-title"]);
+  });
 });

@@ -1,8 +1,22 @@
 import * as XLSX from "xlsx";
-const required = ["id", "title", "summary", "systems", "changeTypes", "technologies", "outcome", "sourceSection", "canonicalGroupId"];
-const outcomes = new Set(["success", "failed", "incident"]);
+const required = ["id", "title"];
+const outcomes = new Set(["success", "failed", "incident", "unknown"]);
 const text = (value) => String(value ?? "").trim();
 const list = (value) => Array.isArray(value) ? value.map(text).filter(Boolean) : text(value).split(/[;,|]/).map(item => item.trim()).filter(Boolean);
+function field(row, ...names) {
+    const entries = Object.entries(row);
+    return entries.find(([key]) => names.some(name => key.trim().toLowerCase() === name.toLowerCase()))?.[1];
+}
+function normalizeOutcome(value) {
+    const normalized = text(value).toLowerCase();
+    if (["success", "successful", "completed", "closed", "implemented"].includes(normalized))
+        return "success";
+    if (["failed", "failure", "unsuccessful"].includes(normalized))
+        return "failed";
+    if (["incident", "open", "rollback", "rolled back"].includes(normalized))
+        return "incident";
+    return "unknown";
+}
 function rowsFromWorkbook(data) {
     const workbook = XLSX.read(data, { type: typeof data === "string" ? "string" : "array" });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -22,18 +36,28 @@ function rowsFromJson(value) {
     throw new Error("Historical JSON must contain an array of records or one historical record.");
 }
 function normalizeRow(row, rowNumber) {
-    const normalized = Object.fromEntries(Object.entries(row).map(([key, value]) => [key.trim(), value]));
-    const missing = required.filter(field => !text(normalized[field]));
+    const id = text(field(row, "id", "Change ID", "ChangeID"));
+    const title = text(field(row, "title", "Title", "Change Title"));
+    const missing = required.filter(name => name === "id" ? !id : !title);
     if (missing.length)
         throw new Error(`Historical row ${rowNumber} is missing: ${missing.join(", ")}.`);
-    const outcome = text(normalized.outcome).toLowerCase();
-    if (!outcomes.has(outcome))
-        throw new Error(`Historical row ${rowNumber} has unsupported outcome "${text(normalized.outcome)}". Use success, failed, or incident.`);
+    const summary = text(field(row, "summary", "Summary", "Additional comments", "Work notes", "Reason for Change", "Reason")) || `Historical record for ${title}.`;
+    const systems = list(field(row, "systems", "System", "Systems"));
+    const changeTypes = list(field(row, "changeTypes", "Change Type", "Type"));
+    const technologies = list(field(row, "technologies", "Technology", "Technologies"));
+    const dependencies = list(field(row, "dependencies", "Dependency", "Dependencies"));
+    const failureModes = list(field(row, "failureModes", "Failure Mode", "Failure Modes"));
+    const suppliedOutcome = field(row, "outcome", "Outcome", "Result");
+    const suppliedOutcomeValue = text(suppliedOutcome).toLowerCase();
+    const acceptedOutcomes = ["success", "successful", "completed", "closed", "implemented", "failed", "failure", "unsuccessful", "incident", "open", "rollback", "rolled back", "unknown"];
+    if (suppliedOutcomeValue && !acceptedOutcomes.includes(suppliedOutcomeValue))
+        throw new Error(`Historical row ${rowNumber} has unsupported outcome "${text(suppliedOutcome)}".`);
+    const outcome = normalizeOutcome(suppliedOutcome ?? field(row, "State"));
     return {
-        id: text(normalized.id), title: text(normalized.title), summary: text(normalized.summary),
-        systems: list(normalized.systems), changeTypes: list(normalized.changeTypes), technologies: list(normalized.technologies),
-        dependencies: list(normalized.dependencies), failureModes: list(normalized.failureModes), outcome: outcome,
-        sourceSection: text(normalized.sourceSection), canonicalGroupId: text(normalized.canonicalGroupId)
+        id, sourceRecordId: id, title, summary, systems, changeTypes: changeTypes.length ? changeTypes : ["planned"], technologies,
+        dependencies, failureModes, outcome,
+        sourceSection: text(field(row, "sourceSection", "Source Section")) || `Historical Change ${id}`,
+        canonicalGroupId: text(field(row, "canonicalGroupId", "Canonical Group ID")) || id
     };
 }
 export function parseHistoricalEvidence(input) {
@@ -57,10 +81,19 @@ export function parseHistoricalEvidence(input) {
     if (!rows.length)
         throw new Error("The historical file does not contain any records.");
     const records = rows.map((row, index) => normalizeRow(row, index + 2));
-    if (new Set(records.map(record => record.id)).size !== records.length)
-        throw new Error("Historical record IDs must be unique.");
-    if (records.some(record => !record.systems.length || !record.changeTypes.length || !record.technologies.length))
-        throw new Error("Each historical record needs systems, changeTypes, and technologies.");
+    const seenIds = new Map();
+    records.forEach((record, index) => {
+        const occurrence = (seenIds.get(record.id) ?? 0) + 1;
+        seenIds.set(record.id, occurrence);
+        if (occurrence > 1) {
+            const originalId = record.id;
+            const uniqueId = `${originalId}-HIST-ROW-${index + 2}`;
+            record.id = uniqueId;
+            if (record.canonicalGroupId === originalId)
+                record.canonicalGroupId = uniqueId;
+            record.sourceSection = `${record.sourceSection} (source ${originalId}, row ${index + 2})`;
+        }
+    });
     return { sourceType, rows: records.length, records, warnings: [] };
 }
 //# sourceMappingURL=historicalEvidenceParser.js.map

@@ -1,7 +1,10 @@
-export type RetrievalMatchType = "system" | "changeType" | "technology" | "dependency" | "failureMode";
+export type RetrievalMatchType = "system" | "changeType" | "technology" | "dependency" | "failureMode" | "text";
 
 export interface HistoricalChangeRecord {
   id: string;
+  sourceRecordId?: string;
+  completedAt?: string;
+  textTerms?: string[];
   title: string;
   summary: string;
   systems: string[];
@@ -15,11 +18,15 @@ export interface HistoricalChangeRecord {
 }
 
 export interface RetrievalQuery {
+  title?: string;
   systems: string[];
   changeType: string;
   technologies: string[];
   dependencies: string[];
   failureModes: string[];
+  currentChangeId?: string;
+  plannedStartDate?: string;
+  textTerms?: string[];
 }
 
 export interface RetrievalMatchReason {
@@ -34,10 +41,16 @@ export interface RetrievedEvidence {
   matchReasons: RetrievalMatchReason[];
 }
 
+export interface SameChangeReference {
+  record: HistoricalChangeRecord;
+  reason: "same-change-reference";
+}
+
 export interface RetrievalResult {
   query: RetrievalQuery;
   topK: number;
   threshold: number;
   items: RetrievedEvidence[];
-  suppressed: Array<{ id: string; reason: "below-threshold" | "top-k-excluded" | "duplicate" | "near-duplicate"; relatedTo?: string }>;
+  sameChangeReferences: SameChangeReference[];
+  suppressed: Array<{ id: string; reason: "below-threshold" | "top-k-excluded" | "duplicate" | "near-duplicate" | "not-historical"; relatedTo?: string }>;
 }

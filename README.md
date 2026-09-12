@@ -35,6 +35,9 @@ JSON arrays or semicolon-separated values in CSV/Excel. The loaded repository is
 memory for the session and is used on the next analysis; it is not persisted and it does
 not alter E0–E3 or AR0–AR3 semantics. Sample files are in
 `fixtures/demo-historical-evidence.csv` and `fixtures/demo-historical-evidence.json`.
+Repeated source `Change ID` values are allowed. The first row keeps the original ID;
+later rows receive an internal evidence ID such as `CHNG1182118-HIST-ROW-6` and retain
+the original value as `sourceRecordId`.
 
 The UI does not persist uploaded data and does not accept provider credentials. Serve
 `dist` with a static server after the build (for example, `npx serve dist`) and open
