@@ -38,6 +38,7 @@ export interface RetrievalMatchReason {
 export interface RetrievedEvidence {
   record: HistoricalChangeRecord;
   score: number;
+  matchPercent: number;
   matchReasons: RetrievalMatchReason[];
 }
 
@@ -51,6 +52,7 @@ export interface RetrievalResult {
   topK: number;
   threshold: number;
   items: RetrievedEvidence[];
+  nearMatches: RetrievedEvidence[];
   sameChangeReferences: SameChangeReference[];
   suppressed: Array<{ id: string; reason: "below-threshold" | "top-k-excluded" | "duplicate" | "near-duplicate" | "not-historical"; relatedTo?: string }>;
 }

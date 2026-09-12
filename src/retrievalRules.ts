@@ -33,7 +33,9 @@ function scoreRecord(query: RetrievalQuery, record: HistoricalChangeRecord): Ret
   add("failureMode", overlap(query.failureModes, record.failureModes), RETRIEVAL_RULES.failureModeMatchPoints);
   if (query.title && titleKey(query.title) === titleKey(record.title)) add("text", ["exact-title"], RETRIEVAL_RULES.exactTitleMatchPoints);
   else add("text", tokenOverlap(query.textTerms, record.textTerms), RETRIEVAL_RULES.textMatchPoints);
-  return { record, score: reasons.reduce((sum, reason) => sum + reason.points, 0), matchReasons: reasons };
+  const score = reasons.reduce((sum, reason) => sum + reason.points, 0);
+  const availablePoints = (query.systems.length ? RETRIEVAL_RULES.systemOverlapPoints : 0) + (query.changeType ? RETRIEVAL_RULES.changeTypeMatchPoints : 0) + (query.technologies.length ? RETRIEVAL_RULES.technologyMatchPoints : 0) + (query.dependencies.length ? RETRIEVAL_RULES.dependencyMatchPoints : 0) + (query.failureModes.length ? RETRIEVAL_RULES.failureModeMatchPoints : 0) + (query.title || query.textTerms?.length ? RETRIEVAL_RULES.exactTitleMatchPoints : 0);
+  return { record, score, matchPercent: availablePoints ? Math.round((score / availablePoints) * 100) : 0, matchReasons: reasons };
 }
 
 export function retrieveHistoricalEvidence(query: RetrievalQuery, repository: HistoricalChangeRecord[], topK: number = RETRIEVAL_RULES.defaultTopK): RetrievalResult {
@@ -57,6 +59,7 @@ export function retrieveHistoricalEvidence(query: RetrievalQuery, repository: Hi
     }
     return true;
   }).sort((a, b) => b.score - a.score || a.record.id.localeCompare(b.record.id));
+  const nearMatches = scored.filter(item => item.score > 0 && item.score < RETRIEVAL_RULES.minimumScore).sort((a, b) => b.score - a.score || a.record.id.localeCompare(b.record.id)).slice(0, topK);
   const unique: RetrievedEvidence[] = [];
   const seenGroups = new Map<string, string>();
   for (const item of eligible) {
@@ -70,5 +73,5 @@ export function retrieveHistoricalEvidence(query: RetrievalQuery, repository: Hi
   }
   const items = unique.slice(0, topK);
   for (const item of unique.slice(topK)) suppressed.push({ id: item.record.id, reason: "top-k-excluded" });
-  return { query, topK, threshold: RETRIEVAL_RULES.minimumScore, items, sameChangeReferences, suppressed };
+  return { query, topK, threshold: RETRIEVAL_RULES.minimumScore, items, nearMatches, sameChangeReferences, suppressed };
 }
