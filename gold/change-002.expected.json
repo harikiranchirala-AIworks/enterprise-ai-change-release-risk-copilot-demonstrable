@@ -1,0 +1,12 @@
+{
+  "changeId": "CHG-002",
+  "observations": [
+    {
+      "code": "RB-001",
+      "severity": "E3",
+      "domain": "Rollback / Recovery"
+    }
+  ],
+  "aggregateReviewState": "AR3",
+  "aggregateFlags": []
+}

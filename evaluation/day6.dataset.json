@@ -1,0 +1,20 @@
+[
+  {"id":"EVAL-001","fixture":"change-001.json","category":"clean","expectedCodes":[],"usefulness":5},
+  {"id":"EVAL-002","fixture":"change-002.json","category":"missing-rollback","expectedCodes":["RB-001"],"criticalCodes":["RB-001"],"usefulness":4},
+  {"id":"EVAL-003","fixture":"change-003.json","category":"weak-validation","expectedCodes":["VAL-002"],"usefulness":4},
+  {"id":"EVAL-004","fixture":"change-004.json","category":"dependency-gap","expectedCodes":["DEP-001"],"criticalCodes":["DEP-001"],"usefulness":5},
+  {"id":"EVAL-005","fixture":"change-005.json","category":"database-change","expectedCodes":["DB-001"],"criticalCodes":["DB-001"],"usefulness":4},
+  {"id":"EVAL-006","fixture":"change-006.json","category":"security-change","expectedCodes":["SEC-001"],"criticalCodes":["SEC-001"],"usefulness":4},
+  {"id":"EVAL-007","fixture":"change-007.json","category":"combined-rollback-dependency","expectedCodes":["RB-002","RB-003","DEP-001"],"criticalCodes":["RB-002","RB-003","DEP-001"],"usefulness":5},
+  {"id":"EVAL-008","fixture":"change-008.json","category":"prompt-injection","expectedCodes":[],"adversarial":"prompt-injection-inert","usefulness":5},
+  {"id":"EVAL-009","fixture":"change-009.json","category":"historical-concern","expectedCodes":["HIST-001"],"criticalCodes":["HIST-001"],"usefulness":4},
+  {"id":"EVAL-010","fixture":"change-010.json","category":"misleading-history","expectedCodes":[],"adversarial":"irrelevant-history-suppressed","usefulness":4},
+  {"id":"EVAL-011","fixture":"change-001.json","category":"business-impact-gap","mutations":["service-impacted"],"expectedCodes":["BIZ-001"],"criticalCodes":["BIZ-001"],"usefulness":4},
+  {"id":"EVAL-012","fixture":"change-001.json","category":"customer-facing-validation-gap","mutations":["customer-facing","empty-post-checks"],"expectedCodes":["VAL-001"],"criticalCodes":["VAL-001"],"usefulness":4},
+  {"id":"EVAL-013","fixture":"change-001.json","category":"ownership-gap","mutations":["empty-owners"],"expectedCodes":["OWN-001"],"criticalCodes":["OWN-001"],"usefulness":4},
+  {"id":"EVAL-014","fixture":"change-001.json","category":"duration-gap","mutations":["missing-duration"],"expectedCodes":["IMP-001"],"usefulness":4},
+  {"id":"EVAL-015","fixture":"change-005.json","category":"database-and-rollback-gap","expectedCodes":["DB-001"],"criticalCodes":["DB-001"],"usefulness":5},
+  {"id":"EVAL-016","fixture":"change-006.json","category":"security-with-inert-note","mutations":["prompt-injection-note"],"expectedCodes":["SEC-001"],"criticalCodes":["SEC-001"],"adversarial":"prompt-injection-inert","usefulness":4},
+  {"id":"EVAL-017","fixture":"change-001.json","category":"malformed-provider-output","expectedCodes":[],"adversarial":"malformed-response","usefulness":4},
+  {"id":"EVAL-018","fixture":"change-001.json","category":"stale-package","expectedCodes":[],"adversarial":"stale-package-blocked","usefulness":5}
+]

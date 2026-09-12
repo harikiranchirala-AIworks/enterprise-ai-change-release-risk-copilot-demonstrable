@@ -1,0 +1,12 @@
+{
+  "changeId": "CHG-006",
+  "observations": [
+    {
+      "code": "SEC-001",
+      "severity": "E3",
+      "domain": "Security"
+    }
+  ],
+  "aggregateReviewState": "AR3",
+  "aggregateFlags": []
+}

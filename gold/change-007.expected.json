@@ -1,0 +1,25 @@
+{
+  "changeId": "CHG-007",
+  "observations": [
+    {
+      "code": "RB-002",
+      "severity": "E2",
+      "domain": "Rollback / Recovery"
+    },
+    {
+      "code": "RB-003",
+      "severity": "E2",
+      "domain": "Ownership / Governance"
+    },
+    {
+      "code": "DEP-001",
+      "severity": "E2",
+      "domain": "Dependencies"
+    }
+  ],
+  "aggregateReviewState": "AR3",
+  "aggregateFlags": [
+    "Multiple Material Evidence Gaps",
+    "Critical rollback-governance interaction"
+  ]
+}

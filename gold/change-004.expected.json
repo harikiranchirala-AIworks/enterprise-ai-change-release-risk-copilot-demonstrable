@@ -1,0 +1,12 @@
+{
+  "changeId": "CHG-004",
+  "observations": [
+    {
+      "code": "DEP-001",
+      "severity": "E2",
+      "domain": "Dependencies"
+    }
+  ],
+  "aggregateReviewState": "AR2",
+  "aggregateFlags": []
+}

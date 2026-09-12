@@ -1,0 +1,62 @@
+{
+  "changeId": "CHG-007",
+  "title": "CRM release with incomplete rollback governance",
+  "description": "Routine NorthStar Telecom platform change.",
+  "company": "NorthStar Telecom",
+  "environment": "production",
+  "serviceImpact": "non-service-impacted",
+  "customerFacing": false,
+  "reversible": true,
+  "riskClassification": "medium",
+  "systems": [
+    "CRM"
+  ],
+  "implementation": {
+    "prerequisites": [
+      "Backups confirmed"
+    ],
+    "steps": [
+      "Deploy approved package"
+    ],
+    "durationMinutes": 60,
+    "owners": [
+      "CRM Platform Team"
+    ],
+    "communicationProvided": true
+  },
+  "rollback": {
+    "steps": [
+      "Restore application package"
+    ],
+    "durationMinutes": 30,
+    "recoveryValidation": [
+      "Run smoke tests"
+    ]
+  },
+  "validation": {
+    "preChecks": [
+      "Health check"
+    ],
+    "postChecks": [
+      "Application smoke test"
+    ],
+    "successCriteria": [
+      "All smoke tests pass"
+    ],
+    "monitoringPeriodMinutes": 30
+  },
+  "dependencies": [
+    {
+      "name": "Billing",
+      "direction": "downstream",
+      "validationProvided": false
+    }
+  ],
+  "approvals": [
+    {
+      "type": "CAB",
+      "provided": true
+    }
+  ],
+  "historicalReferences": []
+}

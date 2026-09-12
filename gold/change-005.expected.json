@@ -1,0 +1,12 @@
+{
+  "changeId": "CHG-005",
+  "observations": [
+    {
+      "code": "DB-001",
+      "severity": "E3",
+      "domain": "Data"
+    }
+  ],
+  "aggregateReviewState": "AR3",
+  "aggregateFlags": []
+}

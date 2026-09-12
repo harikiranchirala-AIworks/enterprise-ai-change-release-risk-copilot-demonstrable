@@ -1,0 +1,12 @@
+{
+  "changeId": "CHG-003",
+  "observations": [
+    {
+      "code": "VAL-002",
+      "severity": "E1",
+      "domain": "Validation"
+    }
+  ],
+  "aggregateReviewState": "AR1",
+  "aggregateFlags": []
+}

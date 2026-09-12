@@ -1,0 +1,20 @@
+{
+  "name": "enterprise-ai-change-release-risk-copilot",
+  "version": "0.1.0-day6",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-ui.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "changeId": "CHG-010",
+  "title": "CRM upgrade with unrelated historical reference",
+  "description": "Routine NorthStar Telecom platform change.",
+  "company": "NorthStar Telecom",
+  "environment": "production",
+  "serviceImpact": "non-service-impacted",
+  "customerFacing": false,
+  "reversible": true,
+  "riskClassification": "medium",
+  "systems": [
+    "CRM"
+  ],
+  "implementation": {
+    "prerequisites": [
+      "Backups confirmed"
+    ],
+    "steps": [
+      "Deploy approved package"
+    ],
+    "durationMinutes": 60,
+    "owners": [
+      "CRM Platform Team"
+    ],
+    "communicationProvided": true
+  },
+  "rollback": {
+    "steps": [
+      "Restore application package"
+    ],
+    "trigger": "Error rate exceeds 2 percent for 10 minutes",
+    "durationMinutes": 30,
+    "decisionOwner": "Change Manager",
+    "recoveryValidation": [
+      "Run smoke tests"
+    ]
+  },
+  "validation": {
+    "preChecks": [
+      "Health check"
+    ],
+    "postChecks": [
+      "Application smoke test"
+    ],
+    "successCriteria": [
+      "All smoke tests pass"
+    ],
+    "monitoringPeriodMinutes": 30
+  },
+  "dependencies": [],
+  "approvals": [
+    {
+      "type": "CAB",
+      "provided": true
+    }
+  ],
+  "historicalReferences": [
+    {
+      "id": "HIST-999",
+      "summary": "Unrelated billing incident.",
+      "relevant": false,
+      "currentMitigationProvided": false
+    }
+  ]
+}
