@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx";
 import { mapChangePackageRow, validateChangePackageRow } from "./changePackageMapper.js";
-const supported = ["Change ID", "Title", "Environment", "Systems", "Dependencies", "Rollback Steps", "Rollback Trigger", "Rollback Owner", "Validation Steps", "Success Criteria", "Business Impact", "Security Review", "Change Owner", "Assigned to", "Planned Start Date", "Planned start date", "Planned End Date", "Planned end date", "Type", "Change Type", "Priority", "Change Priority", "Impact", "Outage Required", "Risk Classification", "Owner Risk Rating"];
+const supported = ["Change ID", "Title", "Environment", "Systems", "Dependencies", "Rollback Steps", "Rollback Trigger", "Rollback Owner", "Validation Steps", "Success Criteria", "Business Impact", "Security Review", "Change Owner", "Assigned to", "Planned Start Date", "Planned start date", "Planned End Date", "Planned end date", "Type", "Change Type", "Priority", "Change Priority", "Impact", "Impact_1", "Outage Required", "Risk Classification", "Owner Risk Rating"];
 function rowsFromWorkbook(data) {
     const workbook = XLSX.read(data, { type: typeof data === "string" ? "string" : "array" });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];

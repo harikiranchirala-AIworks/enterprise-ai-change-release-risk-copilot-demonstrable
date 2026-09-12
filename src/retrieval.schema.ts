@@ -9,7 +9,7 @@ export interface HistoricalChangeRecord {
   technologies: string[];
   dependencies: string[];
   failureModes: string[];
-  outcome: "success" | "failed" | "incident";
+  outcome: "success" | "failed" | "incident" | "unknown";
   sourceSection: string;
   canonicalGroupId: string;
 }

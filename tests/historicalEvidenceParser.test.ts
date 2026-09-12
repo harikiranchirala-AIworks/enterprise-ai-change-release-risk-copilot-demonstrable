@@ -21,9 +21,17 @@ describe("historical evidence repository parser", () => {
     XLSX.utils.book_append_sheet(workbook, sheet, "History"); const bytes = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
     const parsed = parseHistoricalEvidence({ name: "history.xlsx", data: bytes }); expect(parsed.sourceType).toBe("xlsx"); expect(parsed.records[0].id).toBe("HIST-XLSX-001");
   });
+  it("accepts the same CAB-facing notation as the current change upload", async () => {
+    const XLSX = await import("xlsx"); const workbook = XLSX.utils.book_new();
+    const sheet = XLSX.utils.json_to_sheet([{ "Change ID": "CHNG-HIST-001", Type: "Normal", Title: "Webserver configuration changes", Environment: "Production", Priority: "1 - Critical", State: "Open", "Assigned to": "Fictional Owner", "Planned start date": "20-09-2026", "Planned end date": "21-09-2026", Impact: "1 - High", "Additional comments": "Fictional historical record" }]);
+    XLSX.utils.book_append_sheet(workbook, sheet, "Changes"); const bytes = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+    const parsed = parseHistoricalEvidence({ name: "cab-history.xlsx", data: bytes });
+    expect(parsed.records[0]).toMatchObject({ id: "CHNG-HIST-001", title: "Webserver configuration changes", changeTypes: ["Normal"], outcome: "incident" });
+    expect(parsed.records[0].sourceSection).toBe("Historical Change CHNG-HIST-001");
+  });
   it("fails closed for missing fields, invalid outcomes, and duplicate IDs", () => {
-    expect(() => parseHistoricalEvidence({ name: "history.json", data: JSON.stringify([{ id: "H", title: "Missing" }]) })).toThrow(/missing/);
-    const base = { id: "H", title: "Test", summary: "Test", systems: ["CRM"], changeTypes: ["planned"], technologies: ["middleware"], dependencies: [], failureModes: [], outcome: "unknown", sourceSection: "Demo", canonicalGroupId: "H" };
+    expect(() => parseHistoricalEvidence({ name: "history.json", data: JSON.stringify([{ id: "H" }]) })).toThrow(/missing/);
+    const base = { id: "H", title: "Test", summary: "Test", systems: ["CRM"], changeTypes: ["planned"], technologies: ["middleware"], dependencies: [], failureModes: [], outcome: "banana", sourceSection: "Demo", canonicalGroupId: "H" };
     expect(() => parseHistoricalEvidence({ name: "history.json", data: JSON.stringify(base) })).toThrow(/unsupported outcome/);
     expect(() => parseHistoricalEvidence({ name: "history.json", data: JSON.stringify([{ ...base, outcome: "success" }, { ...base, outcome: "success" }]) })).toThrow(/unique/);
   });

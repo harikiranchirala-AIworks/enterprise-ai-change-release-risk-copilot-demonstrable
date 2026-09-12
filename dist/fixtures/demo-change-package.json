@@ -1,0 +1,15 @@
+{
+  "Change ID": "CHG-DEMO-001",
+  "Title": "CRM middleware upgrade",
+  "Environment": "production",
+  "Systems": ["CRM", "Oracle Database", "API Gateway"],
+  "Dependencies": ["Billing", "Order Management"],
+  "Rollback Steps": ["Restore CRM package", "Restore database schema"],
+  "Rollback Trigger": "Error rate exceeds 2% for 10 minutes",
+  "Rollback Owner": "Change Manager",
+  "Validation Steps": ["CRM smoke test", "Billing interface check"],
+  "Success Criteria": ["All smoke tests pass", "No billing errors"],
+  "Business Impact": "Customer-facing service impact",
+  "Security Review": "Not Provided",
+  "Change Owner": "CRM Platform Team"
+}

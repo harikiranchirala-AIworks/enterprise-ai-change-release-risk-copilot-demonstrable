@@ -27,7 +27,7 @@ export function mapChangePackageRow(row) {
     const validationSteps = list(first(row, "Validation Steps", "validationSteps"));
     const successCriteria = list(first(row, "Success Criteria", "successCriteria"));
     const securityReview = bool(first(row, "Security Review", "securityReview"));
-    const businessImpact = text(first(row, "Business Impact", "Impact", "businessImpact"));
+    const businessImpact = text(first(row, "Business Impact", "Impact", "Impact_1", "businessImpact"));
     const outageRequired = text(first(row, "Outage Required", "outageRequired"));
     const serviceImpact = /no impact|non.?service|none|zero|no outage/i.test(businessImpact) && !/^yes$/i.test(outageRequired) ? "non-service-impacted" : "service-impacted";
     const changeOwner = text(first(row, "Change Owner", "Assigned to", "changeOwner"));
@@ -39,7 +39,7 @@ export function mapChangePackageRow(row) {
     const plannedStartDate = parsePackageDate(first(row, "Planned Start Date", "Planned start date", "plannedStartDate"));
     const plannedEndDate = parsePackageDate(first(row, "Planned End Date", "Planned end date", "plannedEndDate"));
     const typeValue = first(row, "Change Type", "Type", "changeType");
-    const parsedEnvironment = environmentValue === "non-production" || environmentValue === "nonproduction" || environmentValue === "test" ? "non-production" : "production";
+    const parsedEnvironment = /non.?prod|test|dev|qa|stage/i.test(environmentValue) ? "non-production" : "production";
     return {
         changeId,
         title,

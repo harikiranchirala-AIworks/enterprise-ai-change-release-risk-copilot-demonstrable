@@ -1,0 +1,4 @@
+id,title,summary,systems,changeTypes,technologies,dependencies,failureModes,outcome,sourceSection,canonicalGroupId
+HIST-DEMO-001,CRM certificate rotation succeeded,Certificate rotation completed with API smoke testing.,CRM;API Gateway,planned,certificate,API Gateway,,success,Demo Historical Change 001,CRM-CERTIFICATE-SUCCESS
+HIST-DEMO-002,CRM certificate timeout,API timeout followed an expired certificate chain during the CRM change.,CRM;API Gateway,planned,certificate;CRM middleware,API Gateway,API timeout;expired certificate chain,incident,Demo Historical Incident 002,CRM-CERTIFICATE-TIMEOUT
+HIST-DEMO-003,Billing dependency validation failure,Downstream contract validation was omitted during a Billing change.,Billing,emergency,API,Billing,missing dependency validation,failed,Demo Historical Incident 003,BILLING-DEPENDENCY-VALIDATION
