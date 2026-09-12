@@ -19,4 +19,14 @@ describe("operator change-package parser", () => {
     expect(parsed.sourceType).toBe("xlsx"); expect(parsed.change.changeId).toBe("CHG-XLSX-001");
   });
   it("fails closed for invalid input", () => { expect(() => parseChangePackage({ name: "bad.txt", data: "x" })).toThrow(/Unsupported file type/); });
+  it("accepts multiple rows and normalizes type and future dates", () => {
+    const csv = ["Change ID,Title,Environment,Type,Planned Start Date,Planned End Date,Priority", "CHG-1,Standard patch,production,Standard,20-09-2026 01:00:00,20-09-2026 02:00:00,3 - Moderate", "CHG-2,Emergency fix,production,Emergency,21-09-2026 01:00:00,21-09-2026 02:00:00,1 - Critical"].join("\n");
+    const parsed = parseChangePackage({ name: "batch.csv", data: csv, now: new Date("2026-09-12T00:00:00Z") });
+    expect(parsed.rows).toBe(2); expect(parsed.changes.map(change => change.changeType)).toEqual(["standard", "emergency"]); expect(parsed.changes[1].riskClassification).toBe("critical");
+  });
+  it("rejects past starts and an end before the start", () => {
+    const csv = "Change ID,Title,Environment,Planned Start Date,Planned End Date\nCHG-1,Invalid,production,10-09-2026,09-09-2026";
+    const parsed = parseChangePackage({ name: "invalid-date.csv", data: csv, now: new Date("2026-09-12T00:00:00Z") });
+    expect(parsed.records[0].status).toBe("Input Validation Failed"); expect(parsed.records[0].validationErrors.join(" ")).toMatch(/must be greater|earlier than|after the planned start/);
+  });
 });

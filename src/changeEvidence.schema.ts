@@ -1,5 +1,6 @@
 export type EvidenceSeverity = "E0" | "E1" | "E2" | "E3";
 export type AggregateReviewState = "AR0" | "AR1" | "AR2" | "AR3";
+export type ChangeType = "standard" | "planned" | "emergency" | "critical";
 export type EvidenceDomain =
   | "Implementation" | "Rollback / Recovery" | "Validation" | "Dependencies"
   | "Security" | "Data" | "Business Impact" | "Ownership / Governance"
@@ -8,6 +9,13 @@ export type EvidenceDomain =
 export interface ChangeEvidence {
   changeId: string;
   title: string;
+  changeType?: ChangeType;
+  changeTypeLabel?: string;
+  changePriority?: string;
+  businessImpact?: string;
+  ownerRiskRating?: string;
+  plannedStartDate?: string;
+  plannedEndDate?: string;
   description: string;
   company: "NorthStar Telecom";
   environment: "production" | "non-production";
