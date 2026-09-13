@@ -6,6 +6,12 @@ The complete portfolio documentation is in [`portfolio/README.md`](portfolio/REA
 
 The system identifies evidence gaps and prepares supporting analysis. It does not approve or reject changes. Human governance retains authority.
 
+
+Enterprise AI Change & Release Risk Copilot — Governed Decision Support for CAB | 2026
+Governed AI in a real decision process: Designed a pre-CAB decision-support workflow combining deterministic evidence checks, retrieval over historical change data, and bounded LLM synthesis to surface evidence gaps before review — while approve/reject authority stays entirely with human CAB reviewers.
+Traceable, fail-closed, evaluated: Every observation traces to evidence IDs and a grounding validator rejects unsupported claims; validated on 18 scenarios / 48 tests with 100% groundedness, 100% critical-gap recall, 0% false positives, 5/5 adversarial passing (real-world CAB UAT pending).Tested with masked data 
+Maps to lived experience: Built on the exact CAB/CRB governance process directed at COLT — enterprise AI applied to a real operating problem, not a generic demo.
+
 ## Operator demo
 
 The lightweight operator UI is compiled to `dist/ui/` and supports one or more change
@@ -47,6 +53,8 @@ synthesis remains server/CLI-side through `src/providerRoute.ts`; the browser de
 the deterministic findings as a bounded, visibly traceable fallback when no provider
 route is configured. `Accept for CAB` only accepts supporting analysis for discussion;
 it never approves the underlying change.
+
+
 
 ## Verification
 
